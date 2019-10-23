@@ -32,8 +32,8 @@ function setup_rpm_builddeps {
     log "Now downloading build dependencies, could take a while..."
     SPECS_DIR="$(rpm --eval %\{_specdir\})"
     SPEC="$(ls "${SPECS_DIR}"/*.spec | head -n 1)"
-    yum makecache fast
-    yum-builddep -y --nogpgcheck "${SPEC}"
+    yum makecache fast || dnf makecache
+    yum-builddep -y --nogpgcheck "${SPEC}" || (dnf install -y dnf-plugins-core; dnf builddep -y --nogpgcheck "${SPEC}")
     log "Download of build dependencies succeeded"
 }
 
